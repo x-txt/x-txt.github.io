@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YUMEIRO PAGE</title>
+  </head>
+  <style>
+  .img1 {
+    background: url('https://i.gifer.com/YdBN.gif');
+    background-repeat: no-repeat;
+    background-size: fit;
+    background-position: center;
+    
+  }
+  .img2 {
+    background: url('https://i.gifer.com/77hH.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    
+  }
+  #loading {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    backdrop-filter:blur(8px);
+    transition:.6s;
+  }
+
+  #loading img {
+    width:120px;
+    margin-bottom:10px;
+  }
+
+  .fade-out {
+    opacity:0;
+    pointer-events:none;
+  }
+</style>
+  <body>
+
+<div id="loading">
+<img  class="w-10 h-auto items-center" src="https://i.gifer.com/XOsX.gif" alt="">
+  <span class="fw-semibold">Loading...</span>
+</div>
+
+
+<nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <h3>YUMEIRO PAGE</h3>
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+  </div>
+</nav>
+
+<main>
+  
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body img1">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="#"><i class="fas fa-home"></i> Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-star"></i> Features</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-tag"></i> Pricing</a>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+    <div class="container my-5">
+
+      <div class="card h-auto w-auto mb-4 shadow">
+        <div class="card-header">
+          Streaming Radio
+        </div>
+        <div class="card-body">
+          <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
+            <div class="title-row">
+              <div>
+                <h5 class="mb-1">Anime Music Radio</h5>
+                <div class="meta"></div>
+              </div>
+            </div>
+            <span class="badge rounded-pill badge-soft align-self-center mt-3 mt-md-0"><i class="fa-solid fa-music"></i> AAC/MP3 Live</span>
+          </div>
+      
+          <div class="d-flex flex-wrap align-items-center controls mb-3">
+            <button id="btnPlay" class="btn btn-default me-2" aria-label="Play/Pause">
+              <i class="fa-solid fa-play"></i> Play
+            </button>
+          </div>
+      
+          <div class="d-flex flex-wrap gap-3 align-items-center">
+            <div><i class="fa-regular fa-clock me-1"></i><span id="elapsed">01:00:00</span></div>
+            <div class="meta">Status: <span id="status">Idle</span></div>
+          </div>
+          
+          <audio id="audio" preload="none" crossorigin="anonymous" src="ado.mp4"></audio>
+          <div align="center">
+          </div>
+      </div>
+    </div>
+    
+
+<div class="card mb-4">
+  <div class="card-body">
+    This is some text within a card body.
+  </div>
+</div>
+    
+
+<div class="card mb-4">
+  <img class="card-img-top" src="https://i.gifer.com/DEX1.gif" alt="">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header">Header</div>
+  <div class="card-body">
+    <h5 class="card-title">card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
+</div>
+
+
+
+
+</div>
+</main>
+
+<ikan class="ikan"></ikan>
+  <script>
+    const audio = document.getElementById('audio');
+    const btnPlay = document.getElementById('btnPlay');
+    const btnStop = document.getElementById('btnStop');
+    const statusEl = document.getElementById('status');
+    const elapsedEl = document.getElementById('elapsed');
+
+    let startTs = 0, timerInt;
+
+    function setStatus(t){ statusEl.textContent = t; }
+
+    btnPlay.addEventListener('click', async ()=>{
+      try {
+        
+        if (audio.paused) {
+          await audio.play();
+          btnPlay.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
+          setStatus('Playing');
+          startTimer();
+          
+        } else {
+          audio.pause();
+          btnPlay.innerHTML = '<i class="fa-solid fa-play"></i> Play';
+          setStatus('Paused');
+          stopTimer(false);
+          
+        }
+      } catch (e) {
+        console.error(e);
+        setStatus('Blocked (user gesture?)');
+      }
+    });
+
+    function startTimer(){
+      startTs = Date.now();
+      clearInterval(timerInt);
+      timerInt = setInterval(()=>{
+        const secs = Math.floor((Date.now() - startTs)/1000);
+        const mm = String(Math.floor(secs/60)).padStart(2,'0');
+        const ss = String(secs%60).padStart(2,'0');
+        elapsedEl.textContent = `${mm}:${ss}`;
+      }, 500);
+    }
+    function stopTimer(reset){
+      clearInterval(timerInt);
+      if (reset) elapsedEl.textContent = '00:00';
+    }
+
+    audio.addEventListener('waiting', ()=> setStatus('Buffering…'));
+    audio.addEventListener('playing', ()=> setStatus('Playing'));
+    audio.addEventListener('pause',   ()=> setStatus('Paused'));
+    audio.addEventListener('error',   ()=> setStatus('Error (cek URL/CORS)'));
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loader = document.getElementById("loading");
+  const mode = document.documentElement.getAttribute("data-bs-theme");
+  if (mode === "light") {
+    loader.style.background = "rgba(0,0,0,.8)";
+    loader.style.color = "#eee";
+  } else {
+    loader.style.background = "rgba(255,255,255,.8)";
+    loader.style.color = "#111";
+  }
+  setTimeout(() => {
+    loader.classList.add("fade-out");
+  }, 3000);
+});
+</script>
+<script src="https://cdn.jsdelivr.net/gh/cdn-lib/npm/theme/lineart.js" data="auto"></script>
+  </body>
+  </html>
+  
